@@ -1,0 +1,105 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm, HTTPBearer
+from sqlalchemy.orm import Session
+from .. import models, schemas, utils, auth
+from ..database import get_db
+from typing import Optional
+
+router = APIRouter(
+    prefix="/user",
+    tags=["Users"]
+)
+
+refresh_token_scheme = HTTPBearer()
+
+# Role-based dependency
+def require_role(role: str):
+    def role_checker(user=Depends(auth.get_current_user)):
+        if user.role != role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions"
+            )
+        return user
+    return role_checker
+
+#! SIGNUP
+@router.post("/signup", response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    # Check if user already exists
+    db_user = db.query(models.User).filter((models.User.email == user.email) | (models.User.username == user.username)).first()
+    if db_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or username already registered"
+        )
+    # Hash the password
+    hashed_password = utils.hash_password(user.password)
+    # Create new user
+    new_user = models.User(
+        username=user.username,
+        email=user.email,
+        hashed_password=hashed_password,
+        role=user.role if user.role in ["admin", "user"] else "user"
+    )
+    # Add to database
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
+#! LOGIN
+@router.post("/login", response_model=schemas.Token)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    # Find user by email or username
+    user = db.query(models.User).filter((models.User.email == form_data.username) | (models.User.username == form_data.username)).first()
+    # Verify user exists and password is correct
+    if not user or not utils.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email/username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    # Create access token (user's email is the payload/subject) and refresh token
+    access_token = auth.create_access_token(data={"sub": user.email})
+    refresh_token = auth.create_refresh_token(data={"sub": user.email})
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+#! REFRESH TOKENS
+@router.post("/refresh", response_model=schemas.Token)
+def refresh_token(token_data: HTTPBearer = Depends(refresh_token_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    token = token_data.credentials
+    # Verify that this is a valid refresh token
+    token_data = auth.verify_token(token, credentials_exception, "refresh")
+    # Find the user
+    user = db.query(models.User).filter(models.User.email == token_data.email).first()
+    if user is None:
+        raise credentials_exception
+    # Generate new access token
+    access_token = auth.create_access_token(data={"sub": user.email})
+    # Generate new refresh token (optional - you could keep the same refresh token)
+    refresh_token = auth.create_refresh_token(data={"sub": user.email})
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+#! GET User profile endpoint
+@router.get("/me", response_model=schemas.UserProfile)
+def get_profile(current_user=Depends(auth.get_current_user)):
+    return current_user
+
+#- Example of admin-only endpoint (for future use)
+# @router.get("/admin-only", dependencies=[Depends(require_role("admin"))])
+# def admin_only_endpoint():
+#     return {"message": "Admin access granted"}
