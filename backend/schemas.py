@@ -44,3 +44,54 @@ class UserProfile(BaseModel):
     created_at: Optional[datetime]
     class Config:
         orm_mode = True
+
+# Form field schema
+class FormFieldBase(BaseModel):
+    label: str
+    field_type: str  # text, number, dropdown, checkbox, etc.
+    options: Optional[list] = None  # For dropdown/checkbox options
+    required: Optional[bool] = False
+    order: Optional[int] = 0
+
+class FormFieldCreate(FormFieldBase):
+    pass
+
+class FormFieldResponse(FormFieldBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+# Form schema
+class FormBase(BaseModel):
+    title: str
+    description: Optional[str] = None
+    schema: dict  # JSON schema for the form structure
+
+class FormCreate(FormBase):
+    fields: Optional[list[FormFieldCreate]] = None  # Optional, for normalized approach
+
+class FormUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    schema: Optional[dict] = None
+    fields: Optional[list[FormFieldCreate]] = None
+
+class FormResponse(FormBase):
+    id: int
+    created_by: int
+    created_at: datetime
+    fields: Optional[list[FormFieldResponse]] = None
+    class Config:
+        orm_mode = True
+
+# Form assignment schema
+class FormAssignmentCreate(BaseModel):
+    user_id: int
+
+class FormAssignmentResponse(BaseModel):
+    id: int
+    user_id: int
+    form_id: int
+    assigned_at: datetime
+    class Config:
+        orm_mode = True

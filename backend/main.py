@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .routers import user
+from .routers import user, forms
 
 app = FastAPI()
 
@@ -45,3 +45,6 @@ async def form_builder(request: Request):
 @app.get("/form-submission", response_class=HTMLResponse)
 async def form_submission(request: Request):
     return templates.TemplateResponse("form-submission.html", {"request": request})
+
+# New forms router
+app.include_router(forms.router)
