@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Builder</title>
+  <link rel="stylesheet" href="static/css/styles.css" />
+</head>
+<body>
+  <h2>Create New Form</h2>
+  <form id="create-form">
+    <input type="text" placeholder="Form Title" required />
+    <textarea placeholder="Form Description"></textarea>
+    <div id="fields">
+      <div class="field-group">
+        <input type="text" placeholder="Field Label" />
+        <select>
+          <option>Text</option>
+          <option>Number</option>
+          <option>Dropdown</option>
+          <option>Checkbox</option>
+        </select>
+      </div>
+    </div>
+    <button type="button" onclick="addField()">Add Field</button>
+    <button type="submit">Save Form</button>
+  </form>
+</body>
+</html>
