@@ -30,18 +30,18 @@ def create_refresh_token(data: dict):
     return encoded_jwt
 
 def verify_token(token: str, credentials_exception, token_type: str = "access", db: Session = None):
-    print("🔑 Token:", token)
+    # print("🔑 Token:", token)
     
     try:
         if db:
             blacklisted = db.query(models.BlacklistedToken).filter(
                 models.BlacklistedToken.token == token).first()
-            print("🛑 Blacklisted token found:", bool(blacklisted))
+            # print("🛑 Blacklisted token found:", bool(blacklisted))
             if blacklisted:
                 raise credentials_exception
         
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print("📦 Payload:", payload)
+        # print("📦 Payload:", payload)
 
         email: str = payload.get("sub")
         token_payload_type: str = payload.get("type")
@@ -63,7 +63,7 @@ def verify_token(token: str, credentials_exception, token_type: str = "access", 
 
 # User Authentication Dependency
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    print("Token received:", token)
+    # print("Token received:", token)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",

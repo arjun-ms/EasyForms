@@ -3,6 +3,7 @@
 
 from pydantic import BaseModel, EmailStr, constr
 from typing import Optional
+from datetime import datetime
 
 # User registration schema
 class UserCreate(BaseModel):
@@ -18,9 +19,10 @@ class UserResponse(BaseModel):
     email: EmailStr
     role: str
     is_active: bool
+    created_at: datetime
     class Config:
         orm_mode = True
-
+    
 # Token schema (for login/refresh responses)
 class Token(BaseModel):
     access_token: str
@@ -39,6 +41,6 @@ class UserProfile(BaseModel):
     email: EmailStr
     role: str
     is_active: bool
-    created_at: Optional[str]
+    created_at: Optional[datetime]
     class Config:
         orm_mode = True
