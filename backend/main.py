@@ -46,5 +46,14 @@ async def form_builder(request: Request):
 async def form_submission(request: Request):
     return templates.TemplateResponse("form-submission.html", {"request": request})
 
+
+# Manage Users Dashboard for admins
+@app.get("/manage-users", response_class=HTMLResponse)
+async def serve_user_management(request: Request):
+    return templates.TemplateResponse("manage-users.html", {"request": request})
+
+
+
+
 # New forms router
 app.include_router(forms.router)

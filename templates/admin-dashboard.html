@@ -8,7 +8,7 @@
     <nav>
       <a href="#" onclick="startNewForm()">Create Form</a>
       <!-- <a href="#">View Forms</a>  -->  <!-- this is already displayed so no need for a seperate section --> 
-      <a href="#">Manage Users</a>
+      <a href="#" onclick="goToUsers()">Manage Users</a>
       <a href="#">Assign Forms</a>
     </nav>
     <main>
@@ -24,6 +24,9 @@
         function startNewForm() {
           localStorage.removeItem("edit_form_id");
           window.location.href = "/form-builder";
+        }
+        function goToUsers() {
+          window.location.href = "/manage-users";
         }
       </script>
     </main>
