@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm, HTTPBearer
 from sqlalchemy.orm import Session
 from .. import models, schemas, utils, auth
 from ..database import get_db
-from typing import Optional
+from typing import Optional, List
 
 router = APIRouter(
     prefix="/user",
@@ -98,6 +98,13 @@ def refresh_token(token_data: HTTPBearer = Depends(refresh_token_scheme), db: Se
 @router.get("/me", response_model=schemas.UserProfile)
 def get_profile(current_user=Depends(auth.get_current_user)):
     return current_user
+
+
+#- Get all users (Admin only)
+@router.get("/users", response_model=List[schemas.UserResponse], dependencies=[Depends(require_role("admin"))])
+def get_all_users(db: Session = Depends(get_db)):
+    return db.query(models.User).all()
+
 
 #- Example of admin-only endpoint (for future use)
 # @router.get("/admin-only", dependencies=[Depends(require_role("admin"))])
