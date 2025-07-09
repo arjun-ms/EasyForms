@@ -1,37 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Form Builder</title>
-  <link rel="stylesheet" href="static/css/styles.css" />
-</head>
-<body>
-  <h2>Create New Form</h2>
-  <form id="create-form">
-    <input type="text" name="title" placeholder="Form Title" required />
-    <textarea name="description" placeholder="Form Description"></textarea>
-    <div id="fields">
-      <div class="field-group">
-        <input type="text" name="label" placeholder="Field Label" />
-        <select name="type">
-          <option value="text">Text</option>
-          <option value="number">Number</option>
-          <option value="dropdown">Dropdown</option>
-          <option value="checkbox">Checkbox</option>
-        </select>
-        <!-- ASSIGN TO A USER -->
+  <head>
+    <title>Form Builder</title>
+    <link rel="stylesheet" href="static/css/styles.css" />
+  </head>
+  <body>
+    <!-- Form Builder -->
+    <h2>Create New Form</h2>
+    <form id="create-form">
+      <input type="text" name="title" placeholder="Form Title" required />
+      <textarea name="description" placeholder="Form Description"></textarea>
+
+      <!-- Assign User block -->
+      <div id="assign-user-container">
         <label for="assign-user">Assign to User:</label>
-        <select name="assign_user" id="assign-user" required>
+        <select name="assign_user" id="assign-user">
           <option value="">-- Select a user --</option>
         </select>
       </div>
-    </div>
-    <button type="button" id="add-field-btn">Add Field</button>
-    <button type="submit">Save Form</button>
 
-    <!-- Cancel Edit Button -->
-    <button type="button" onclick="cancelEdit()">Cancel Edit</button>
+      <!-- Show assigned user when editing -->
+      <div id="assigned-user-block" style="display: none; margin-bottom: 10px;">
+        Assigned to: <span id="assigned-user-name" style="font-weight: bold;"></span>
+      </div>
 
-  </form>  
-  <script src="static/js/form-builder.js"></script>
-</body>
+      <div id="fields"></div>
+
+      <button type="button" id="add-field-btn">Add Field</button>
+      <button type="submit">Save Form</button>
+      <button type="button" onclick="cancelEdit()">Cancel Edit</button>
+    </form>
+
+    <script src="static/js/form-builder.js"></script>
+  </body>
 </html>

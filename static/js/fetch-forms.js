@@ -113,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
       if (!res.ok) throw new Error("Failed to reassign form");
       alert("Form reassigned");
+      fetchForms(); //- Refresh the dashboard with updated assignment
     } catch (err) {
       displayError(err.message);
     }

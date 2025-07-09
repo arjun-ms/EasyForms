@@ -27,6 +27,7 @@ class Form(Base):
     schema = Column(JSON, nullable=False)
     created_by = Column(Integer, ForeignKey('users.id'))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    assigned_user = None
 
     creator = relationship('User', back_populates='forms')
     assignments = relationship('FormAssignment', back_populates='form')

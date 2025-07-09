@@ -83,7 +83,7 @@ class FormUpdate(BaseModel):
     description: Optional[str] = None
     schema: Optional[dict] = None
     fields: Optional[list[FormFieldCreate]] = None
-
+    assigned_user_id: Optional[int] = None
 class FormResponse(FormBase):
     id: int
     created_by: int

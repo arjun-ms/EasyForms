@@ -43,39 +43,49 @@ def create_form(form: schemas.FormCreate, db: Session = Depends(get_db), current
     db_form.fields  # triggers relationship
     return db_form
 
+
 @router.get("/", response_model=List[schemas.FormResponse], dependencies=[Depends(admin_required)])
 def list_forms(db: Session = Depends(get_db)):
     """List all forms with assigned user (Admin only)"""
     from sqlalchemy.orm import joinedload
 
-    # Fetch forms with fields and assignments → user
     forms = db.query(models.Form).options(
         joinedload(models.Form.fields),
         joinedload(models.Form.assignments).joinedload(models.FormAssignment.user)
     ).all()
 
-    enriched_forms = []
     for form in forms:
-        # Assuming one user per form assignment (MVP)
-        assigned_user = form.assignments[0].user if form.assignments else None
+        # Extract latest assigned user if exists
+        if form.assignments:
+            latest_assignment = sorted(form.assignments, key=lambda a: a.assigned_at, reverse=True)[0]
+            form.assigned_user = latest_assignment.user
+        else:
+            form.assigned_user = None
 
-        enriched_form = {
-            **form.__dict__,
-            "fields": form.fields,  # ensure fields are included
-            "assigned_user": assigned_user
-        }
-        enriched_forms.append(enriched_form)
-
-    return enriched_forms
+    return forms
 
 
 @router.get("/{form_id}", response_model=schemas.FormResponse, dependencies=[Depends(admin_required)])
 def get_form(form_id: int, db: Session = Depends(get_db)):
     """Get a specific form by ID (Admin only)"""
-    form = db.query(models.Form).filter(models.Form.id == form_id).first()
+    from sqlalchemy.orm import joinedload
+
+    form = db.query(models.Form).options(
+        joinedload(models.Form.fields),
+        joinedload(models.Form.assignments).joinedload(models.FormAssignment.user)
+    ).filter(models.Form.id == form_id).first()
+
     if not form:
         raise HTTPException(status_code=404, detail="Form not found")
+
+    if form.assignments:
+        latest_assignment = sorted(form.assignments, key=lambda a: a.assigned_at, reverse=True)[0]
+        form.assigned_user = latest_assignment.user
+    else:
+        form.assigned_user = None
+
     return form
+
 
 @router.put("/{form_id}", response_model=schemas.FormResponse, dependencies=[Depends(admin_required)])
 def update_form(form_id: int, form: schemas.FormUpdate, db: Session = Depends(get_db)):
@@ -91,6 +101,17 @@ def update_form(form_id: int, form: schemas.FormUpdate, db: Session = Depends(ge
         db_form.schema = form.schema
     db.commit()
     db.refresh(db_form)
+
+    # UPDATE ASSIGNMENT if user_id is sent in payload
+    if hasattr(form, "assigned_user_id") and form.assigned_user_id:
+        # Delete old assignment
+        db.query(models.FormAssignment).filter(models.FormAssignment.form_id == form_id).delete()
+        db.commit()
+        # Create new assignment
+        new_assignment = models.FormAssignment(user_id=form.assigned_user_id, form_id=form_id)
+        db.add(new_assignment)
+        db.commit()
+
     # Optionally update fields if provided
     if form.fields is not None:
         # Remove existing fields

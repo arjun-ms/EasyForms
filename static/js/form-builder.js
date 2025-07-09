@@ -1,46 +1,49 @@
-async function loadUsersDropdown() {
+async function loadUsersDropdown(selectedUserId = null) {
   const token = localStorage.getItem("access_token");
   const dropdown = document.getElementById("assign-user");
+
+  dropdown.innerHTML = `<option value="">-- Select a user --</option>`; // Clear and add default
 
   try {
     const res = await fetch("/user/users", {
       headers: {
-        Authorization: "Bearer " + token
-      }
+        Authorization: "Bearer " + token,
+      },
     });
 
     if (!res.ok) throw new Error("Failed to fetch users");
 
     const users = await res.json();
-    users.forEach(user => {
+    users.forEach((user) => {
       const option = document.createElement("option");
       option.value = user.id;
       option.textContent = user.username;
       dropdown.appendChild(option);
     });
+
+    if (selectedUserId) {
+      dropdown.value = selectedUserId.toString();
+    }
   } catch (err) {
     console.error("Error loading users:", err);
     displayError("Failed to load user list");
   }
 }
 
-
-
-// Add field to the form
 function addField() {
   const container = document.getElementById("fields");
   const group = document.createElement("div");
   group.className = "field-group";
 
   group.innerHTML = `
-      <input type="text" name="label" placeholder="Field Label" />
-      <select name="type">
-        <option value="text">Text</option>
-        <option value="number">Number</option>
-        <option value="dropdown">Dropdown</option>
-        <option value="checkbox">Checkbox</option>
-      </select>
-    `;
+    <input type="text" name="label" placeholder="Field Label" />
+    <select name="type">
+      <option value="text">Text</option>
+      <option value="number">Number</option>
+      <option value="dropdown">Dropdown</option>
+      <option value="checkbox">Checkbox</option>
+    </select>
+  `;
 
   container.appendChild(group);
 }
@@ -50,13 +53,11 @@ function cancelEdit() {
   window.location.href = "/admin";
 }
 
-// Display error message
 function displayError(message) {
   const errorBox = document.getElementById("error-message");
   if (errorBox) errorBox.textContent = message;
 }
 
-// Preload existing form data for editing
 async function preloadFormData(formId) {
   const token = localStorage.getItem("access_token");
   if (!token) return displayError("Missing token");
@@ -73,41 +74,51 @@ async function preloadFormData(formId) {
     const form = await res.json();
 
     document.querySelector("[name='title']").value = form.title;
-    document.querySelector("[name='description']").value = form.description || "";
+    document.querySelector("[name='description']").value =
+      form.description || "";
 
-    // Assigned user block setup
+    const assignUserContainer = document.getElementById(
+      "assign-user-container"
+    );
     const assignedBlock = document.getElementById("assigned-user-block");
     const usernameBlock = document.getElementById("assigned-user-name");
-    const assignUserContainer = document.getElementById("assign-user-container");
 
-    if (form.assigned_to) {
-      // Assigned to someone → show block, hide dropdown
-      assignedBlock.style.display = "block";
-      assignUserContainer.style.display = "none";
-      usernameBlock.textContent = form.assigned_to.username;
-    } else {
-      assignedBlock.style.display = "none";
+    // ✅ load dropdown with pre-selected user
+    if (form.assigned_user) {
+      await loadUsersDropdown(form.assigned_user.id);
       assignUserContainer.style.display = "block";
+      assignedBlock.style.display = "none";
+    } else {
+      await loadUsersDropdown();
+      assignUserContainer.style.display = "block";
+      assignedBlock.style.display = "none";
     }
 
-    // Clear and populate fields
     const fieldContainer = document.getElementById("fields");
     fieldContainer.innerHTML = "";
 
     (form.fields || []).forEach((f) => {
       const group = document.createElement("div");
       group.className = "field-group";
-
       group.innerHTML = `
-        <input type="text" name="label" placeholder="Field Label" value="${f.label}" />
+        <input type="text" name="label" placeholder="Field Label" value="${
+          f.label
+        }" />
         <select name="type">
-          <option value="text" ${f.field_type === "text" ? "selected" : ""}>Text</option>
-          <option value="number" ${f.field_type === "number" ? "selected" : ""}>Number</option>
-          <option value="dropdown" ${f.field_type === "dropdown" ? "selected" : ""}>Dropdown</option>
-          <option value="checkbox" ${f.field_type === "checkbox" ? "selected" : ""}>Checkbox</option>
+          <option value="text" ${
+            f.field_type === "text" ? "selected" : ""
+          }>Text</option>
+          <option value="number" ${
+            f.field_type === "number" ? "selected" : ""
+          }>Number</option>
+          <option value="dropdown" ${
+            f.field_type === "dropdown" ? "selected" : ""
+          }>Dropdown</option>
+          <option value="checkbox" ${
+            f.field_type === "checkbox" ? "selected" : ""
+          }>Checkbox</option>
         </select>
       `;
-
       fieldContainer.appendChild(group);
     });
   } catch (err) {
@@ -116,18 +127,16 @@ async function preloadFormData(formId) {
   }
 }
 
-
-
-// Form submit logic (create or update)
 document.addEventListener("DOMContentLoaded", async () => {
-  await loadUsersDropdown();
+  const editFormId = localStorage.getItem("edit_form_id");
+
+  if (editFormId) {
+    await preloadFormData(editFormId); // dropdown loaded inside
+  } else {
+    await loadUsersDropdown(); // for create mode
+  }
 
   document.getElementById("add-field-btn").addEventListener("click", addField);
-
-  const editFormId = localStorage.getItem("edit_form_id");
-  if (editFormId) {
-    await preloadFormData(editFormId);
-  }
 
   document
     .getElementById("create-form")
@@ -142,6 +151,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const title = document.querySelector("[name='title']").value;
       const description = document.querySelector("[name='description']").value;
+
+      const assignUserDropdown = document.getElementById("assign-user");
+      const isDropdownVisible =
+        assignUserDropdown && assignUserDropdown.offsetParent !== null;
+      const selectedUserId = isDropdownVisible
+        ? assignUserDropdown.value
+        : null;
 
       const fields = Array.from(
         document.querySelectorAll("#fields .field-group")
@@ -184,24 +200,28 @@ document.addEventListener("DOMContentLoaded", async () => {
           const error = await response.json();
           throw new Error(error.detail || "Failed to save form.");
         }
+
         const createdForm = await response.json();
 
-        const selectedUserId = document.getElementById("assign-user").value;
-        if (!editFormId && selectedUserId) {
-          const assignRes = await fetch(`/forms/${createdForm.id}/assign`, {
-            method: "POST",
+        if (selectedUserId) {
+          // Re-send the form update with assigned_user_id
+          const updateRes = await fetch(`/forms/${createdForm.id}`, {
+            method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: "Bearer " + token
             },
-            body: JSON.stringify({ user_id: parseInt(selectedUserId) })
+            body: JSON.stringify({
+              assigned_user_id: parseInt(selectedUserId)
+            })
           });
-
-          if (!assignRes.ok) {
-            const assignError = await assignRes.json();
-            throw new Error(assignError.detail || "Failed to assign form to user.");
+        
+          if (!updateRes.ok) {
+            const updateError = await updateRes.json();
+            throw new Error(updateError.detail || "Failed to reassign form.");
           }
         }
+        
 
         alert(editFormId ? "Form updated!" : "Form created!");
         localStorage.removeItem("edit_form_id");
