@@ -7,21 +7,22 @@
 <body>
   <h2>Create New Form</h2>
   <form id="create-form">
-    <input type="text" placeholder="Form Title" required />
-    <textarea placeholder="Form Description"></textarea>
+    <input type="text" name="title" placeholder="Form Title" required />
+    <textarea name="description" placeholder="Form Description"></textarea>
     <div id="fields">
       <div class="field-group">
-        <input type="text" placeholder="Field Label" />
-        <select>
-          <option>Text</option>
-          <option>Number</option>
-          <option>Dropdown</option>
-          <option>Checkbox</option>
+        <input type="text" name="label" placeholder="Field Label" />
+        <select name="type">
+          <option value="text">Text</option>
+          <option value="number">Number</option>
+          <option value="dropdown">Dropdown</option>
+          <option value="checkbox">Checkbox</option>
         </select>
       </div>
     </div>
-    <button type="button" onclick="addField()">Add Field</button>
+    <button type="button" id="add-field-btn">Add Field</button>
     <button type="submit">Save Form</button>
-  </form>
+  </form>  
+  <script src="static/js/form-builder.js"></script>
 </body>
 </html>
