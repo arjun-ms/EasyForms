@@ -30,17 +30,36 @@ document.addEventListener("DOMContentLoaded", function () {
         const list = document.getElementById("form-list");
         list.innerHTML = "";
   
+        // forms.forEach((form) => {
+        //     const li = document.createElement("li");
+        //     li.innerHTML = `
+        //       <strong>${form.title}</strong> - ${form.description || ""}<br/>
+        //       <button onclick="editForm(${form.id})">Edit</button>
+        //       <button onclick="deleteForm(${form.id})">Delete</button>
+        //       <button onclick="reassignForm(${form.id})">Reassign</button>
+        //       <hr/>
+        //     `;
+        //     list.appendChild(li);
+        //   });
         forms.forEach((form) => {
-            const li = document.createElement("li");
-            li.innerHTML = `
-              <strong>${form.title}</strong> - ${form.description || ""}<br/>
-              <button onclick="editForm(${form.id})">Edit</button>
-              <button onclick="deleteForm(${form.id})">Delete</button>
-              <button onclick="reassignForm(${form.id})">Reassign</button>
-              <hr/>
-            `;
-            list.appendChild(li);
-          });
+          const li = document.createElement("li");
+        
+          const assignedUser = form.assigned_user
+            ? `<span style="background-color:#4CAF50; color:white; padding:4px 8px; border-radius:5px; font-size: 0.9rem;">Assigned to ${form.assigned_user.username}</span>`
+            : `<span style="background-color:#f44336; color:white; padding:4px 8px; border-radius:5px; font-size: 0.9rem;">Not assigned</span>`;
+        
+          li.innerHTML = `
+            <strong>${form.title}</strong> - ${form.description || ""}
+            <br/><br/>
+            <button onclick="editForm(${form.id})">Edit</button>
+            <button onclick="deleteForm(${form.id})">Delete</button>
+            ${assignedUser}
+            <hr/>
+          `;
+        
+          list.appendChild(li);
+        });
+        
       })
       .catch((err) => {
         displayError(err.message);

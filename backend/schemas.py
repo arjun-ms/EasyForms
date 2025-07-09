@@ -5,6 +5,14 @@ from pydantic import BaseModel, EmailStr, constr
 from typing import Optional
 from datetime import datetime
 
+class AssignedUser(BaseModel):
+    id: int
+    username: str
+
+    class Config:
+        orm_mode = True
+
+        
 # User registration schema
 class UserCreate(BaseModel):
     username: constr(min_length=3, max_length=50)
@@ -81,6 +89,7 @@ class FormResponse(FormBase):
     created_by: int
     created_at: datetime
     fields: Optional[list[FormFieldResponse]] = None
+    assigned_user: Optional[AssignedUser] = None
     class Config:
         orm_mode = True
 

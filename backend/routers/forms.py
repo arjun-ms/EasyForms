@@ -45,9 +45,29 @@ def create_form(form: schemas.FormCreate, db: Session = Depends(get_db), current
 
 @router.get("/", response_model=List[schemas.FormResponse], dependencies=[Depends(admin_required)])
 def list_forms(db: Session = Depends(get_db)):
-    """List all forms (Admin only)"""
-    forms = db.query(models.Form).all()
-    return forms
+    """List all forms with assigned user (Admin only)"""
+    from sqlalchemy.orm import joinedload
+
+    # Fetch forms with fields and assignments → user
+    forms = db.query(models.Form).options(
+        joinedload(models.Form.fields),
+        joinedload(models.Form.assignments).joinedload(models.FormAssignment.user)
+    ).all()
+
+    enriched_forms = []
+    for form in forms:
+        # Assuming one user per form assignment (MVP)
+        assigned_user = form.assignments[0].user if form.assignments else None
+
+        enriched_form = {
+            **form.__dict__,
+            "fields": form.fields,  # ensure fields are included
+            "assigned_user": assigned_user
+        }
+        enriched_forms.append(enriched_form)
+
+    return enriched_forms
+
 
 @router.get("/{form_id}", response_model=schemas.FormResponse, dependencies=[Depends(admin_required)])
 def get_form(form_id: int, db: Session = Depends(get_db)):
