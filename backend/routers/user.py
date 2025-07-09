@@ -61,8 +61,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             headers={"WWW-Authenticate": "Bearer"},
         )
     # Create access token (user's email is the payload/subject) and refresh token
-    access_token = auth.create_access_token(data={"sub": user.email})
-    refresh_token = auth.create_refresh_token(data={"sub": user.email})
+    access_token = auth.create_access_token(data={"sub": user.email, "role": user.role })
+    refresh_token = auth.create_refresh_token(data={"sub": user.email, "role": user.role })
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,

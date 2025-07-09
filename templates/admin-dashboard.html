@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="static/css/styles.css" />
-</head>
-<body>
-  <nav>
-    <a href="form-builder.html">Create Form</a>
-    <a href="#">View Forms</a>
-    <a href="#">Assign Forms</a>
-    <a href="#">Manage Users</a>
-  </nav>
-  <main>
-    <h2>Welcome, Admin</h2>
-    <p>Select an action from the menu.</p>
-  </main>
-</body>
+  <head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="static/css/styles.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="form-builder.html">Create Form</a>
+      <a href="#">View Forms</a>
+      <a href="#">Assign Forms</a>
+      <a href="#">Manage Users</a>
+    </nav>
+    <main>
+      <h2>Welcome, Admin</h2>
+      <p>Select an action from the menu.</p>
+      <h2>Existing Forms</h2>
+
+      <!-- Error message container -->
+      <div id="error-message" style="color: red; margin-bottom: 10px;"></div>
+
+      <ul id="form-list"></ul>
+      <script src="static/js/form-builder.js"></script>
+    </main>
+  </body>
 </html>
