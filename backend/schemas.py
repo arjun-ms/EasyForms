@@ -2,7 +2,7 @@
 # and is used to define the data models for the application.
 
 from pydantic import BaseModel, EmailStr, constr
-from typing import Optional
+from typing import Optional, Dict
 from datetime import datetime
 
 class AssignedUser(BaseModel):
@@ -102,5 +102,19 @@ class FormAssignmentResponse(BaseModel):
     user_id: int
     form_id: int
     assigned_at: datetime
+    class Config:
+        orm_mode = True
+
+
+class FormSubmission(BaseModel):
+    response_data: Dict  # answers keyed by label
+
+class SubmissionResponse(BaseModel):
+    id: int
+    user_id: int
+    form_id: int
+    submitted_at: datetime
+    response_data: Dict
+
     class Config:
         orm_mode = True

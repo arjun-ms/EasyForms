@@ -6,15 +6,46 @@
 </head>
 <body>
   <h2>Assigned Forms</h2>
-  <ul>
-    <li>
-      <span>COVID Declaration</span>
-      <a href="form-submission.html">Fill Form</a>
-    </li>
-    <li>
-      <span>Feedback Form</span>
-      <a href="#">Fill Form</a>
-    </li>
-  </ul>
+  <ul id="form-list"></ul>
+
+  <script>
+    const formList = document.getElementById("form-list");
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      alert("You must log in first.");
+      window.location.href = "login.html";
+    }
+
+    fetch("http://127.0.0.1:8000/user/forms/assigned", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch assigned forms");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.length === 0) {
+          formList.innerHTML = "<li>No forms assigned.</li>";
+        } else {
+          data.forEach((form) => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <span>${form.title}</span>
+              <a href="form-submission.html?form_id=${form.id}">Fill Form</a>
+            `;
+            formList.appendChild(li);
+          });
+        }
+      })
+      .catch((err) => {
+        alert("Error fetching forms: " + err.message);
+      });
+  </script>
 </body>
 </html>

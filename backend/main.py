@@ -3,12 +3,16 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .routers import user, forms
+from .routers import submissions, user, forms, user_forms
 
 app = FastAPI()
 
 # Existing user router
 app.include_router(user.router)
+app.include_router(forms.router)
+app.include_router(user_forms.router) 
+app.include_router(submissions.router)
+
 
 # Existing health check
 @app.get("/health")
@@ -54,6 +58,3 @@ async def serve_user_management(request: Request):
 
 
 
-
-# New forms router
-app.include_router(forms.router)

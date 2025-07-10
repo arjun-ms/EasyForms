@@ -10,7 +10,7 @@ router = APIRouter(
     tags=["forms"]
 )
 
-# Admin dependency
+# Admin dependency (GLOBAL)
 admin_required = require_role("admin")
 
 @router.post("/", response_model=schemas.FormResponse, dependencies=[Depends(admin_required)])
@@ -170,3 +170,5 @@ def assign_form(form_id: int, assignment: schemas.FormAssignmentCreate, db: Sess
     db.commit()
     db.refresh(db_assignment)
     return db_assignment 
+
+
