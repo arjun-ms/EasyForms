@@ -4,6 +4,8 @@ from typing import List
 from .. import schemas, models, auth
 from ..database import get_db
 from ..routers.user import require_role
+from collections import defaultdict
+from statistics import mean
 
 router = APIRouter(
     prefix="/forms",
@@ -177,3 +179,51 @@ def get_form_submissions(form_id: int, db: Session = Depends(get_db)):
     """Admin: Get all submissions for a specific form"""
     submissions = db.query(models.Submission).filter(models.Submission.form_id == form_id).all()
     return submissions
+
+#- ANALYTICS
+@router.get("/{form_id}/analytics", dependencies=[Depends(admin_required)])
+def get_form_analytics(form_id: int, db: Session = Depends(get_db)):
+    """Admin: Get submission analytics for a form"""
+
+    form = db.query(models.Form).filter(models.Form.id == form_id).first()
+    if not form:
+        raise HTTPException(status_code=404, detail="Form not found")
+
+    submissions = db.query(models.Submission).filter(models.Submission.form_id == form_id).all()
+
+    if not submissions:
+        return {
+            "form_id": form_id,
+            "total_submissions": 0,
+            "field_summary": {}
+        }
+
+    # Process field-level analytics
+    field_summary = defaultdict(lambda: defaultdict(int))
+    numeric_fields = defaultdict(list)
+
+    for sub in submissions:
+        for field, value in sub.response_data.items():
+            if isinstance(value, (int, float)):
+                numeric_fields[field].append(value)
+            else:
+                field_summary[field][str(value)] += 1
+
+    # Convert to clean summary
+    final_summary = {}
+
+    for field, values in field_summary.items():
+        final_summary[field] = dict(values)
+
+    for field, values in numeric_fields.items():
+        final_summary[field] = {
+            "average": round(mean(values), 2),
+            "min": min(values),
+            "max": max(values)
+        }
+
+    return {
+        "form_id": form_id,
+        "total_submissions": len(submissions),
+        "field_summary": final_summary
+    }
