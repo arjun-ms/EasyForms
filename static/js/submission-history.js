@@ -29,7 +29,10 @@ document.addEventListener("DOMContentLoaded", async () => {
           li.innerHTML = `
             <strong>Form ID:</strong> ${sub.form_id}<br/>
             <strong>Date:</strong> ${new Date(sub.submitted_at).toLocaleString()}<br/>
-            <strong>Data:</strong> <pre>${JSON.stringify(sub.response_data, null, 2)}</pre>
+            <strong>Data:</strong>
+            <ul>
+            ${Object.entries(sub.response_data).map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`).join("")}
+            </ul>
             <hr/>
           `;
           list.appendChild(li);

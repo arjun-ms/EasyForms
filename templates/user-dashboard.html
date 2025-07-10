@@ -19,34 +19,46 @@
       window.location.href = "login.html";
     }
 
-    fetch("http://127.0.0.1:8000/user/forms/assigned", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    let submittedFormIds = [];
+
+    // Step 1: Fetch submitted form IDs
+    fetch("http://127.0.0.1:8000/submissions", {
+      headers: { Authorization: `Bearer ${token}` },
     })
+      .then((res) => res.json())
+      .then((submissions) => {
+        submittedFormIds = submissions.map((s) => s.form_id);
+        return fetch("http://127.0.0.1:8000/user/forms/assigned", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      })
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch assigned forms");
         }
         return res.json();
       })
-      .then((data) => {
-        if (data.length === 0) {
+      .then((forms) => {
+        if (forms.length === 0) {
           formList.innerHTML = "<li>No forms assigned.</li>";
         } else {
-          data.forEach((form) => {
+          forms.forEach((form) => {
             const li = document.createElement("li");
+            const isSubmitted = submittedFormIds.includes(form.id);
+
             li.innerHTML = `
-              <span>${form.title}</span>
-              <a href="form-submission.html?form_id=${form.id}">Fill Form</a>
+              <strong>${form.title}</strong>
+              ${isSubmitted 
+                ? `<span style="color: green; font-weight: bold;">✅ Submitted</span>` 
+                : `<a href="form-submission.html?form_id=${form.id}">📝 Fill Form</a>`
+              }
             `;
             formList.appendChild(li);
           });
         }
       })
       .catch((err) => {
-        alert("Error fetching forms: " + err.message);
+        alert("Error: " + err.message);
       });
   </script>
 
