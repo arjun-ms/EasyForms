@@ -172,3 +172,8 @@ def assign_form(form_id: int, assignment: schemas.FormAssignmentCreate, db: Sess
     return db_assignment 
 
 
+@router.get("/{form_id}/submissions", response_model=List[schemas.SubmissionResponse], dependencies=[Depends(admin_required)])
+def get_form_submissions(form_id: int, db: Session = Depends(get_db)):
+    """Admin: Get all submissions for a specific form"""
+    submissions = db.query(models.Submission).filter(models.Submission.form_id == form_id).all()
+    return submissions
