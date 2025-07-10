@@ -11,6 +11,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(`/user/forms/${formId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    if (!response.ok) {
+      if (response.status === 403) {
+        alert("Access denied. This form is not assigned to you.");
+      } else if (response.status === 404) {
+        alert("Form not found.");
+      } else {
+        alert("Something went wrong.");
+      }
+      window.location.href = "/user-dashboard.html";
+      return;
+    }
   
     const form = await response.json();
     document.querySelector("h2").textContent = `Fill Form: ${form.title}`;
