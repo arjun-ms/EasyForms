@@ -22,7 +22,7 @@
     let submittedFormIds = [];
 
     // Step 1: Fetch submitted form IDs
-    fetch("http://127.0.0.1:8000/submissions", {
+    fetch("http://127.0.0.1:8000/user/forms", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
