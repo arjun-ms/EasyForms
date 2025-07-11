@@ -1,37 +1,109 @@
+/* === Base Styling === */
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background: #f2f2f2;
-  }
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #f2f2f2;
+}
+
+.container, main {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, textarea, select, button {
+  padding: 8px;
+  font-size: 1rem;
+}
+
+nav a {
+  margin-right: 15px;
+}
+
+#assigned-user-block {
+  background-color: #e0f7fa;
+  border: 1px solid #00acc1;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#assigned-user-name {
+  color: #007c91;
+}
+
+/* === Submission History Styling === */
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+ul#submission-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submission-card {
+  background-color: #ffffff;
+  border-left: 6px solid #4CAF50;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.submission-card:hover {
+  transform: scale(1.01);
+}
+
+.submission-card h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.submission-card p,
+.response-data {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.response-data strong {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.response-data ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.response-data li {
+  margin-bottom: 4px;
+  font-size: 13.5px;
+}
+
+@media screen and (max-width: 480px) {
   .container, main {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    margin: auto;
+    padding: 15px;
+    max-width: 100%;
   }
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+
+  .submission-card {
+    padding: 14px;
   }
-  input, textarea, select, button {
-    padding: 8px;
-    font-size: 1rem;
-  }
-  nav a {
-    margin-right: 15px;
-  }
-  #assigned-user-block {
-    background-color: #e0f7fa;
-    border: 1px solid #00acc1;
-    border-radius: 4px;
-    padding: 10px;
-    margin-top: 10px;
-    font-weight: bold;
-  }
-  
-  #assigned-user-name {
-    color: #007c91;
-  }
-  
+}

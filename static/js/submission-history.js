@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   
     try {
-      const res = await fetch("/submissions", {
+      const res = await fetch("/user/forms", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -24,19 +24,57 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (submissions.length === 0) {
         list.innerHTML = "<li>No submissions found.</li>";
       } else {
+        
+        //- Formatting Submissions
+        
         submissions.forEach((sub) => {
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <strong>Form ID:</strong> ${sub.form_id}<br/>
-            <strong>Date:</strong> ${new Date(sub.submitted_at).toLocaleString()}<br/>
-            <strong>Data:</strong>
-            <ul>
-            ${Object.entries(sub.response_data).map(([key, value]) => `<li><strong>${key}:</strong> ${value}</li>`).join("")}
-            </ul>
-            <hr/>
+          const card = document.createElement("div");
+          card.className = "card mb-3 shadow-sm";
+        
+          // ✅ Fix: dig into sub.response_data.response_data
+          const actualResponse = sub.response_data.response_data || sub.response_data; // fallback if already flat
+        
+          const responseTableRows = Object.entries(actualResponse).map(
+            ([key, value]) => `
+              <tr>
+                <td>${key}</td>
+                <td>${typeof value === 'object' ? JSON.stringify(value) : value}</td>
+              </tr>
+            `
+          ).join("");
+        
+          card.innerHTML = `
+            <div class="card-body">
+              <h5 class="card-title">
+                <i class="bi bi-journal-text me-2"></i>${sub.form?.title || "Untitled Form"}
+              </h5>
+              <h6 class="card-subtitle mb-2 text-muted">
+                <i class="bi bi-calendar-event me-2"></i>${new Date(sub.submitted_at).toLocaleString()}
+              </h6>
+        
+              <p class="mt-3 mb-1 fw-bold">
+                <i class="bi bi-list-check me-2 text-success"></i>Response Data:
+              </p>
+        
+              <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Key</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${responseTableRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           `;
-          list.appendChild(li);
+        
+          list.appendChild(card);
         });
+ 
       }
     } catch (err) {
       list.innerHTML = `<li>Error: ${err.message}</li>`;

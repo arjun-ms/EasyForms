@@ -100,4 +100,10 @@ def get_user_assigned_form(
 @router.get("/", response_model=List[schemas.SubmissionResponse])
 def list_my_submissions(db: Session = Depends(get_db), current_user=Depends(auth.get_current_user)):
     """View all submissions made by the current user"""
-    return db.query(models.Submission).filter(models.Submission.user_id == current_user.id).all()
+    submissions = db.query(models.Submission).options(
+        joinedload(models.Submission.form)
+    ).filter(
+        models.Submission.user_id == current_user.id
+    ).all()
+
+    return submissions

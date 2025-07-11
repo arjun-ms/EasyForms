@@ -116,5 +116,7 @@ class SubmissionResponse(BaseModel):
     submitted_at: datetime
     response_data: Dict
 
+    form: Optional[FormBase]
+    
     class Config:
         orm_mode = True    #- tells Pydantic to convert SQLAlchemy ORM models to Pydantic models correctly.
