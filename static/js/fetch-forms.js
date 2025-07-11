@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
             <br/><br/>
             <button onclick="editForm(${form.id})">Edit</button>
             <button onclick="deleteForm(${form.id})">Delete</button>
+            <button onclick="viewSubmissions(${form.id})">View Submissions</button>
+            <br/><br/>
             ${assignedUser}
             <hr/>
           `;
@@ -125,3 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (errorBox) errorBox.textContent = message;
   }
   
+  function viewSubmissions(formId) {
+    localStorage.setItem("view_submissions_form_id", formId);
+    window.location.href = "/submission-history";
+  }
