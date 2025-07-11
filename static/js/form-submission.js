@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const form = await response.json();
-    console.log("Fetched form from backend:", form);
+    //- console.log("Fetched form from backend:", form);
 
     let schema = form.schema;
 

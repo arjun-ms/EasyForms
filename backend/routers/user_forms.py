@@ -66,7 +66,7 @@ def submit_form_response(form_id: int, response_data: dict, db: Session = Depend
     db.commit()
     db.refresh(submission)
 
-    return {"message": "Form submitted successfully", "submission_id": submission.id}
+    return submission
 
 #- Get a specific assigned form ( for a logged-in user )
 @router.get("/{form_id}", response_model=schemas.FormResponse)
@@ -95,3 +95,9 @@ def get_user_assigned_form(
 
     form.assigned_user = current_user  # for frontend rendering
     return form
+
+#- List all submissions made by the current user
+@router.get("/", response_model=List[schemas.SubmissionResponse])
+def list_my_submissions(db: Session = Depends(get_db), current_user=Depends(auth.get_current_user)):
+    """View all submissions made by the current user"""
+    return db.query(models.Submission).filter(models.Submission.user_id == current_user.id).all()

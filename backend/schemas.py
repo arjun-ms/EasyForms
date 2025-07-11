@@ -117,4 +117,4 @@ class SubmissionResponse(BaseModel):
     response_data: Dict
 
     class Config:
-        orm_mode = True
+        orm_mode = True    #- tells Pydantic to convert SQLAlchemy ORM models to Pydantic models correctly.
