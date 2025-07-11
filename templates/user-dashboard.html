@@ -50,7 +50,7 @@
               <strong>${form.title}</strong>
               ${isSubmitted 
                 ? `<span style="color: green; font-weight: bold;">✅ Submitted</span>` 
-                : `<a href="form-submission.html?form_id=${form.id}">📝 Fill Form</a>`
+                : `<a href="/form-submission?form_id=${form.id}">📝 Fill Form</a>`
               }
             `;
             formList.appendChild(li);
