@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("access_token");
-  const formId = localStorage.getItem("view_submissions_form_id"); // for admin view
   const list = document.getElementById("submission-list");
 
   if (!token) {
@@ -9,12 +8,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Check user role or presence of token to decide whether to clear it
+  const isAdmin = localStorage.getItem("user_role") === "admin";
+  const formId = isAdmin ? localStorage.getItem("view_submissions_form_id") : null;
+
+  if (!isAdmin) {
+    // Not admin -> remove this key
+    localStorage.removeItem("view_submissions_form_id");
+  }
+
   try {
     let submissions = [];
 
+    // console.log(`form id ${formId}`);
+
     //- 👤 USER VIEW: If no formId present, it's the logged-in user's own submissions
     if (!formId) {
-      const res = await fetch("/user/forms", {
+      // console.log("THIS IS INSIDE USER: SHOW SUBMISSIONS");
+
+      const res = await fetch("/user/forms/", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -23,10 +35,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Failed to fetch your submissions.");
 
       submissions = await res.json();
-    } 
-    
+    }
+
     //- 👮‍♂️ ADMIN VIEW: Show submissions for a selected form
     else {
+      // console.log("THIS IS INSIDE ADMIN: SHOW SUBMISSIONS");
+
       const res = await fetch(`/forms/${formId}/submissions`, {
         headers: {
           Authorization: "Bearer " + token,
@@ -56,7 +70,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           ([key, value]) => `
           <tr>
             <td>${key}</td>
-            <td>${typeof value === "object" ? JSON.stringify(value) : value}</td>
+            <td>${
+              typeof value === "object" ? JSON.stringify(value) : value
+            }</td>
           </tr>`
         )
         .join("");
@@ -64,10 +80,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.innerHTML = `
         <div class="card-body">
           <h5 class="card-title">
-            <i class="bi bi-journal-text me-2"></i>${sub.form?.title || "Untitled Form"}
+            <i class="bi bi-journal-text me-2"></i>${
+              sub.form?.title || "Untitled Form"
+            }
           </h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            <i class="bi bi-calendar-event me-2"></i>${new Date(sub.submitted_at).toLocaleString()}
+            <i class="bi bi-calendar-event me-2"></i>${new Date(
+              sub.submitted_at
+            ).toLocaleString()}
           </h6>
 
           ${
