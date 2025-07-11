@@ -1,15 +1,16 @@
 /* === Base Styling === */
 body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  background: #f2f2f2;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #f8f9fa;
+  margin: 0;
+  padding: 0;
 }
 
 .container, main {
-  background: white;
+  background: transparent;
   padding: 20px;
   border-radius: 10px;
-  max-width: 500px;
+  max-width: 800px;
   margin: auto;
 }
 
@@ -43,67 +44,156 @@ nav a {
 
 /* === Submission History Styling === */
 
-h2 {
-  margin-bottom: 20px;
-  text-align: center;
+.page-title {
+  font-size: 2rem;
+  font-weight: 400;
   color: #333;
+  margin-bottom: 8px;
 }
 
-ul#submission-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+.page-title i {
+  color: #8e44ad;
 }
 
-.submission-card {
-  background-color: #ffffff;
-  border-left: 6px solid #4CAF50;
-  padding: 16px;
-  margin-bottom: 20px;
+.page-subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+#submission-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease;
+  margin-bottom: 20px;
+  box-shadow: none;
 }
 
-.submission-card:hover {
-  transform: scale(1.01);
+.card-body {
+  padding: 20px;
 }
 
-.submission-card h3 {
-  margin-top: 0;
-  font-size: 18px;
+.card-title {
   color: #333;
-}
-
-.submission-card p,
-.response-data {
-  margin: 8px 0;
-  font-size: 14px;
-}
-
-.response-data strong {
-  display: inline-block;
+  font-size: 1.1rem;
+  font-weight: 500;
   margin-bottom: 6px;
-  color: #555;
+  display: flex;
+  align-items: center;
 }
 
-.response-data ul {
-  padding-left: 20px;
-  margin: 0;
+.card-title i {
+  color: #8e44ad;
+  font-size: 1rem;
 }
 
-.response-data li {
-  margin-bottom: 4px;
-  font-size: 13.5px;
+.card-subtitle {
+  color: #007bff !important;
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin-bottom: 20px !important;
+  display: flex;
+  align-items: center;
 }
 
-@media screen and (max-width: 480px) {
-  .container, main {
+.card-subtitle i {
+  font-size: 0.9rem;
+}
+
+.text-info {
+  color: #007bff !important;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.response-data-label {
+  color: #333;
+  font-size: 1rem;
+  font-weight: normal;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+.table-responsive {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.table {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  background: white;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  color: #495057;
+  font-weight: 600;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+}
+
+.table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: middle;
+}
+
+.table tbody td:first-child {
+  background-color: #f8f9fa;
+  font-weight: 500;
+  color: #495057;
+  width: 40%;
+}
+
+.table tbody td:last-child {
+  color: #333;
+  background-color: white;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* === Responsive Design === */
+@media screen and (max-width: 768px) {
+  .container {
     padding: 15px;
     max-width: 100%;
   }
 
-  .submission-card {
-    padding: 14px;
+  .card-body {
+    padding: 15px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container, main {
+    padding: 10px;
+  }
+
+  .card-body {
+    padding: 12px;
+  }
+
+  .table thead th,
+  .table tbody td {
+    padding: 8px 10px;
+    font-size: 0.8rem;
   }
 }
