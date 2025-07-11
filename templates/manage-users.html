@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>Manage Users</title>
@@ -19,6 +19,49 @@
     </thead>
     <tbody></tbody>
   </table>
+  <script src="static/js/manage-users.js"></script>
+</body>
+</html> -->
+
+
+
+<!--  -->
+<!--  -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Users</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/styles.css" />
+</head>
+<body class="bg-light p-4">
+  <div class="container">
+    <h2 class="mb-4">All Users</h2>
+    <div id="error-message" class="text-danger mb-3"></div>
+
+    <table id="user-table" class="table table-bordered table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot class="table-light">
+        <tr>
+          <td colspan="4"><strong>Total Users</strong></td>
+          <td id="user-count" class="fw-bold text-end">0</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <p class="text-center text-muted">User Management Table</p>
+  </div>
+
   <script src="static/js/manage-users.js"></script>
 </body>
 </html>
