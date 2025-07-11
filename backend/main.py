@@ -47,8 +47,8 @@ async def form_builder(request: Request):
 
 # Serve Form Submission Dashboard
 @app.get("/form-submission", response_class=HTMLResponse)
-async def form_submission(request: Request):
-    return templates.TemplateResponse("form-submission.html", {"request": request})
+async def form_submission(request: Request, form_id: int):
+    return templates.TemplateResponse("form-submission.html", {"request": request,"form_id": form_id})
 
 
 # Manage Users Dashboard for admins
