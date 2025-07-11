@@ -18,7 +18,7 @@ app.include_router(user_forms.router)
 def health_check():
     return {"status": "ok"}
 
-# Mount static files for CSS/JS
+# Serve all HTML/JS/CSS from the "static" folder
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Setup Jinja2 template engine
@@ -56,4 +56,7 @@ async def serve_user_management(request: Request):
     return templates.TemplateResponse("manage-users.html", {"request": request})
 
 
+@app.get("/submission-history", response_class=HTMLResponse)
+async def submission_history_page(request: Request):
+    return templates.TemplateResponse("submission-history.html", {"request": request})
 
