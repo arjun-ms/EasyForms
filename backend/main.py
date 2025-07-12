@@ -24,10 +24,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Setup Jinja2 template engine
 templates = Jinja2Templates(directory="templates")
 
-# Serve index.html (login page)
+# Serve index.html (login page) 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+# Serve signup.html (signup page) 
+@app.get("/signup", response_class=HTMLResponse)
+async def serve_index(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
 
 # Serve Admin Dashboard
 @app.get("/admin", response_class=HTMLResponse)

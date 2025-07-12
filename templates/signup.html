@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sign Up | Dynamic Form Platform</title>
+    <link rel="stylesheet" href="static/css/styles.css" />
+  </head>
+  <body>
+    <main class="auth-container">
+      <div class="auth-card">
+        <h2>Get Started 🚀</h2>
+        <p class="subtitle">Create your account</p>
+        <form id="signup-form">
+          <label for="username">Username</label>
+          <input id="username" type="text" required />
+
+          <label for="email">Email</label>
+          <input id="email" type="email" required />
+
+          <label for="password">Password</label>
+          <input id="password" type="password" required />
+
+          <button type="submit" class="btn-primary">Sign Up</button>
+        </form>
+        <p class="auth-link">
+          Already have an account? <a href="index.html">Log in</a>
+        </p>
+      </div>
+    </main>
+    <script>
+      document
+        .getElementById("signup-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const user = {
+            username: document.getElementById("username").value,
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            role: "user", // optional; can be omitted if default is "user"
+          };
+
+          try {
+            const res = await fetch("/user/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(user),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+              alert("Signup successful! Please log in.");
+              window.location.href = "index.html";
+            } else {
+              alert("Signup failed: " + (data.detail || "Unknown error"));
+            }
+          } catch (err) {
+            alert("An error occurred: " + err.message);
+          }
+        });
+    </script>
+  </body>
+</html>
