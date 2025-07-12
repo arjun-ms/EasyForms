@@ -1,35 +1,135 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Form Builder</title>
+    <title>Enhanced Form Builder</title>
     <link rel="stylesheet" href="static/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body>
-    <!-- Form Builder -->
-    <h2>Create New Form</h2>
-    <form id="create-form">
-      <input type="text" name="title" placeholder="Form Title" required />
-      <textarea name="description" placeholder="Form Description"></textarea>
-
-      <!-- Assign User block -->
-      <div id="assign-user-container">
-        <label for="assign-user">Assign to User:</label>
-        <select name="assign_user" id="assign-user">
-          <option value="">-- Select a user --</option>
-        </select>
+    <div class="form-builder-container">
+      <!-- Header -->
+      <div class="form-builder-header">
+        <h1 class="form-builder-title">Form Builder</h1>
+        <p class="form-builder-subtitle">Create and customize forms with ease</p>
       </div>
 
-      <!-- Show assigned user when editing -->
-      <div id="assigned-user-block" style="display: none; margin-bottom: 10px;">
-        Assigned to: <span id="assigned-user-name" style="font-weight: bold;"></span>
+      <!-- Form Configuration Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Form Configuration</h2>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="form-title">Form Title <span class="required">*</span></label>
+            <input type="text" id="form-title" placeholder="Enter form title" required />
+          </div>
+
+          <div class="form-group">
+            <label for="form-description">Form Description</label>
+            <textarea id="form-description" placeholder="Enter form description (optional)" rows="4"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="assign-user">Assign to User</label>
+            <select id="assign-user">
+              <option value="">-- Select a user --</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <div id="fields"></div>
+      <!-- Form Fields Section -->
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Form Fields (<span id="field-count">0</span>)</h2>
+          <div class="quick-add-buttons">
+            <button type="button" class="quick-add-btn" data-type="text">
+              + Text
+            </button>
+            <button type="button" class="quick-add-btn" data-type="textarea">
+              + Textarea
+            </button>
+            <button type="button" class="quick-add-btn" data-type="select">
+              + Select
+            </button>
+            <button type="button" class="quick-add-btn" data-type="checkbox">
+              + Checkbox
+            </button>
+            <button type="button" class="quick-add-btn" data-type="date">
+              + Date
+            </button>
+            <button type="button" class="quick-add-btn" data-type="email">
+              + Email
+            </button>
+          </div>
+        </div>
+        <div class="section-content">
+          <!-- Fields Container -->
+          <div id="fields-container"></div>
 
-      <button type="button" id="add-field-btn">Add Field</button>
-      <button type="submit">Save Form</button>
-      <button type="button" onclick="cancelEdit()">Cancel Edit</button>
-    </form>
+          <!-- Empty State -->
+          <div id="empty-state" class="empty-state">
+            <i class="fas fa-plus-circle"></i>
+            <p class="empty-message">No fields added yet</p>
+            <p class="empty-description">Click the buttons above to add form fields</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" id="save-form-btn">
+          <i class="fas fa-save"></i>
+          Save Form
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+          <i class="fas fa-times"></i>
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Edit Field Modal -->
+    <div id="edit-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Edit Field</h3>
+          <button class="modal-close" onclick="closeEditModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-label">Field Label</label>
+            <input type="text" id="edit-label" placeholder="Enter field label" />
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-placeholder">Placeholder Text</label>
+            <input type="text" id="edit-placeholder" placeholder="Enter placeholder text" />
+          </div>
+
+          <!-- Options section for select fields -->
+          <div id="options-section" class="options-section" style="display: none;">
+            <label>Options</label>
+            <div id="options-container"></div>
+            <button type="button" class="add-option-btn" onclick="addOption()">
+              <i class="fas fa-plus"></i> Add Option
+            </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="saveFieldEdit()">
+            <i class="fas fa-check"></i> Save
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="message-container"></div>
 
     <script src="static/js/form-builder.js"></script>
   </body>

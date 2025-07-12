@@ -4,7 +4,7 @@
 from pydantic import BaseModel, EmailStr, constr
 from typing import Optional, Dict
 from datetime import datetime
-
+from pydantic import root_validator, ValidationError
 class AssignedUser(BaseModel):
     id: int
     username: str
@@ -78,6 +78,17 @@ class FormBase(BaseModel):
 class FormCreate(FormBase):
     fields: Optional[list[FormFieldCreate]] = None  # Optional, for normalized approach
 
+    @root_validator(pre=True)
+    def validate_schema_fields(cls, values):
+        schema = values.get("schema", {})
+        fields = schema.get("fields", [])
+        try:
+            # Validate using Pydantic
+            validated_fields = [FormFieldCreate(**field) for field in fields]
+        except ValidationError as e:
+            raise ValueError(f"Invalid field in schema.fields: {e}")
+        return values
+    
 class FormUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
