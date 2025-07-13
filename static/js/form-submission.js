@@ -75,6 +75,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       sectionTitle.textContent = section.title || `Section ${sectionIndex + 1}`;
       dynamicForm.appendChild(sectionTitle);
 
+      //- Sort fields by `order` before rendering
+      section.fields.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
       section.fields.forEach((field) => {
         const fieldType = field.field_type || field.type;
       

@@ -368,7 +368,7 @@ async function preloadFormData(formId) {
     fieldContainer.innerHTML = "";
     fieldCount = 0;
 
-    (form.fields || []).forEach((f) => {
+    (form.fields || []).sort((a, b) => a.order - b.order).forEach((f) => {
       const fieldData = {
         id: `field-${Date.now()}-${fieldCount}`,
         type: f.field_type,
