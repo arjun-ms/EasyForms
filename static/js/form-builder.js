@@ -203,12 +203,14 @@ function getFieldDataFromElement(element) {
   
   let options = [];
   if (type === 'select') {
-    const optionsText = element.querySelector('.field-description:last-of-type')?.textContent;
-    if (optionsText && optionsText.startsWith('Options:')) {
-      options = optionsText.replace('Options: ', '').split(', ');
+    const selectElement = element.querySelector('select');
+    if (selectElement) {
+      options = Array.from(selectElement.options)
+        .map(opt => opt.textContent)
+        .filter(opt => opt && opt !== placeholder);
     }
   }
-  
+
   return {
     type: type === 'textarea' ? 'textarea' : type,
     label,
@@ -410,6 +412,17 @@ async function saveForm() {
   const emptyLabels = fields.filter(f => !f.label.trim());
   if (emptyLabels.length > 0) {
     showMessage("All fields must have labels.", 'error');
+    return;
+  }
+
+  // ✅ Validate select fields have at least one option
+  const invalidSelects = fields.filter(f =>
+    f.type === 'select' && (!f.options || f.options.length === 0)
+  );
+
+  if (invalidSelects.length > 0) {
+    const fieldNames = invalidSelects.map(f => `"${f.label}"`).join(", ");
+    showMessage(`Select field(s) ${fieldNames} must have at least one option.`, 'error');
     return;
   }
 
