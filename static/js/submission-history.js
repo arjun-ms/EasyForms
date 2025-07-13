@@ -8,9 +8,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  //- Decode token to get role
+  const payload = JSON.parse(atob(token.split(".")[1]));
+  const role = payload.role || payload.type;
+  const isAdmin = role === "admin";
+
+  console.log(`Decoded role from token: ${role}`);
+
   // Check user role or presence of token to decide whether to clear it
-  const isAdmin = localStorage.getItem("user_role") === "admin";
+  //! const isAdmin = localStorage.getItem("user_role") === "admin";
   const formId = isAdmin ? localStorage.getItem("view_submissions_form_id") : null;
+  
+  // console.log(`is Admin: ${isAdmin}`)
+  // console.log("Form ID:", formId);
 
   if (!isAdmin) {
     // Not admin -> remove this key
@@ -39,7 +49,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     //- 👮‍♂️ ADMIN VIEW: Show submissions for a selected form
     else {
-      // console.log("THIS IS INSIDE ADMIN: SHOW SUBMISSIONS");
+      console.log("THIS IS INSIDE ADMIN: SHOW SUBMISSIONS");
+      console.log(localStorage.getItem("view_submissions_form_id"));
 
       const res = await fetch(`/forms/${formId}/submissions`, {
         headers: {
@@ -50,6 +61,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!res.ok) throw new Error("Failed to fetch form submissions (admin).");
 
       submissions = await res.json();
+
+      console.log("Admin Form ID:", formId);
+      console.log("Fetched Submissions:", submissions);
     }
 
     if (!Array.isArray(submissions) || submissions.length === 0) {

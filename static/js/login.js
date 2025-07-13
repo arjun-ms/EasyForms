@@ -16,10 +16,14 @@ document
     if (res.ok) {
       const token = data.access_token;
       localStorage.setItem("access_token", token);
-
+      // localStorage.setItem("user_role", data.role);
+      
       // Decode token to extract role
       const payload = JSON.parse(atob(token.split(".")[1]));
+      // console.log(`PAYLOAD: ${payload}`)
+
       const role = payload.role || payload.type;
+      // console.log(`ROLE from payload: ${payload}`)
 
       // Redirect based on role
       if (role === "admin") {
