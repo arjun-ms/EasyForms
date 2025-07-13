@@ -26,10 +26,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const form = await response.json();
-    //- console.log("Fetched form from backend:", form);
+    console.log("Fetched form from backend:", form);
 
     let schema = form.schema;
 
+    // console.log("Fetched form schema:", schema);
+    // console.log("Type of form schema:", (typeof schema));
+    
     // Parse schema if it's stored as a JSON string
     if (typeof schema === "string") {
       try {
@@ -39,12 +42,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
     }
-
-    if (!schema || !schema.sections || !schema.sections.length) {
-      alert("⚠️ Form schema is invalid or missing sections.");
+    
+    // console.log("Full schema object:", schema);
+    // console.log("schema.sections:", schema?.sections);
+    // console.log("schema.sections.length:", schema?.sections?.length);
+    if (!schema || !schema.fields || !schema.fields.length) {
+      alert("⚠️ FORM SCHEMA is invalid or missing fields.");
       return;
     }
 
+    // Normalize schema
+    if (!schema.sections) {
+      schema.sections = [
+        {
+          title: "Main Section",
+          fields: schema.fields || [],
+        }
+      ];
+    }
+    
     document.querySelector("h2").textContent = `Fill Form: ${form.title}`;
 
     const dynamicForm = document.getElementById("dynamic-form");
@@ -72,10 +88,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         dynamicForm.appendChild(label);
       
         let input;
-        if (fieldType === "text" || fieldType === "number") {
+        if (
+          fieldType === "text" ||
+          fieldType === "number" ||
+          fieldType === "email" ||
+          fieldType === "date"
+        ) {
           input = document.createElement("input");
           input.type = fieldType;
-        } else if (fieldType === "dropdown") {
+        } else if (fieldType === "textarea") {
+          input = document.createElement("textarea");
+        } else if (fieldType === "select" || fieldType === "dropdown") {
           input = document.createElement("select");
           (field.options || []).forEach((opt) => {
             const option = document.createElement("option");

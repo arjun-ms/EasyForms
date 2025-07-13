@@ -182,3 +182,18 @@ body {
   color: #718096;
   padding: 2rem;
 }
+.view-submissions-btn {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+.view-submissions-btn:hover {
+  background: #e9ecef;
+  color: #495057;
+  text-decoration: none;
+}

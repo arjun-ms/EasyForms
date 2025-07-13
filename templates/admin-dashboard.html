@@ -22,6 +22,13 @@
           </svg>
           Create Form
         </button>
+
+        <!-- LOGOUT BUTTON  -->
+        <button id="logout-btn" class="view-submissions-btn">
+          <i class="bi bi-box-arrow-right me-1"></i>
+          Logout
+        </button>
+
       </div>
     </header>
 
@@ -66,6 +73,11 @@
           errorBox.style.display = message ? 'block' : 'none';
         }
       }
+
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        localStorage.removeItem("access_token");
+        window.location.href = "/";
+      });
     </script>
   </body>
 </html>
