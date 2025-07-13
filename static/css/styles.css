@@ -861,3 +861,89 @@ nav a {
     padding: 2rem 1rem;
   }
 }
+
+
+/* === Enhanced Dynamic Form Styling === */
+#dynamic-form {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
+#dynamic-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+#dynamic-form label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+#dynamic-form input[type="text"],
+#dynamic-form input[type="email"],
+#dynamic-form select,
+#dynamic-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#dynamic-form input[type="date"] {
+  width: 100% !important;
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#dynamic-form input:focus,
+#dynamic-form textarea:focus,
+#dynamic-form select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+#dynamic-form input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+#dynamic-form .form-group.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#dynamic-form button[type="submit"] {
+  background-color: #1f2937;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+#dynamic-form button[type="submit"]:hover {
+  background-color: #111827;
+}

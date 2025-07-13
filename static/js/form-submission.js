@@ -55,13 +55,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!schema.sections) {
       schema.sections = [
         {
-          title: "Main Section",
+          title: `${form.title}`,
           fields: schema.fields || [],
         }
       ];
     }
     
-    document.querySelector("h2").textContent = `Fill Form: ${form.title}`;
+    document.querySelector("h2").textContent = `Fill Form:`;
 
     const dynamicForm = document.getElementById("dynamic-form");
     dynamicForm.innerHTML = ""; // Clear any previous content
