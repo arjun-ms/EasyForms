@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Sign Up | Dynamic Form Platform</title>
+    <meta name="api-base-url" content="{{ API_BASE_URL }}" />
     <link rel="stylesheet" href="static/css/styles.css" />
   </head>
   <body>
@@ -28,6 +29,12 @@
       </div>
     </main>
     <script>
+      const apiBaseUrl = document
+        .querySelector('meta[name="api-base-url"]')
+        .getAttribute("content");
+    </script>
+    <script>
+      
       document
         .getElementById("signup-form")
         .addEventListener("submit", async (e) => {

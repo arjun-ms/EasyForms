@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // console.log("Fetched form schema:", schema);
     // console.log("Type of form schema:", (typeof schema));
-    
+
     // Parse schema if it's stored as a JSON string
     if (typeof schema === "string") {
       try {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
     }
-    
+
     // console.log("Full schema object:", schema);
     // console.log("schema.sections:", schema?.sections);
     // console.log("schema.sections.length:", schema?.sections?.length);
@@ -57,10 +57,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         {
           title: `${form.title}`,
           fields: schema.fields || [],
-        }
+        },
       ];
     }
-    
+
     document.querySelector("h2").textContent = `Fill Form:`;
 
     const dynamicForm = document.getElementById("dynamic-form");
@@ -80,16 +80,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       section.fields.forEach((field) => {
         const fieldType = field.field_type || field.type;
-      
+
         if (!fieldType) {
           console.warn("Missing field type for field:", field);
           return;
         }
-      
+
         const label = document.createElement("label");
         label.textContent = field.label;
         dynamicForm.appendChild(label);
-      
+
         let input;
         if (
           fieldType === "text" ||
@@ -116,15 +116,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           console.warn("Unsupported field type:", fieldType);
           return;
         }
-      
+
         input.name = field.label;
         if (field.required) input.required = true;
         dynamicForm.appendChild(input);
-      
+
         // Store field reference
         fieldRefs[field.label] = { input, field };
       });
-      
     });
 
     // Add Submit Button

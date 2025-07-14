@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Enhanced Form Builder</title>
+    <meta name="api-base-url" content="{{ API_BASE_URL }}" />
     <link rel="stylesheet" href="static/css/styles.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
@@ -131,6 +132,11 @@
 
     <div id="message-container"></div>
 
+    <script>
+      const apiBaseUrl = document
+        .querySelector('meta[name="api-base-url"]')
+        .getAttribute("content");
+    </script>
     <script src="static/js/form-builder.js"></script>
   </body>
 </html>

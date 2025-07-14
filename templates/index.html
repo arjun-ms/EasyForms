@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Login | Dynamic Form Platform</title>
+    <meta name="api-base-url" content="{{ API_BASE_URL }}" />
     <link rel="stylesheet" href="static/css/styles.css" />
   </head>
   <body>
@@ -22,6 +23,11 @@
         <p class="auth-link">Don’t have an account? <a href="/signup">Sign Up</a></p>
       </div>
     </main>
+    <script>
+      const apiBaseUrl = document
+        .querySelector('meta[name="api-base-url"]')
+        .getAttribute("content");
+    </script>
     <script src="static/js/login.js"></script>
   </body>
 </html>

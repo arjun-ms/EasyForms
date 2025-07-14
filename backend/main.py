@@ -3,10 +3,14 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 from .routers import user, forms, user_forms
 
 app = FastAPI()
+
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000") 
 
 # Base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -31,45 +35,47 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 # Serve index.html (login page) 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 @app.get("/index.html", response_class=HTMLResponse)
 async def serve_index_alias(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("index.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 # Serve signup.html (signup page) 
 @app.get("/signup", response_class=HTMLResponse)
 async def serve_index(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
+    return templates.TemplateResponse("signup.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 # Serve Admin Dashboard
 @app.get("/admin", response_class=HTMLResponse)
 async def serve_admin(request: Request):
-    return templates.TemplateResponse("admin-dashboard.html", {"request": request})
+    return templates.TemplateResponse("admin-dashboard.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 # Serve User Dashboard
 @app.get("/user", response_class=HTMLResponse)
 async def serve_user(request: Request):
-    return templates.TemplateResponse("user-dashboard.html", {"request": request})
+    return templates.TemplateResponse("user-dashboard.html", {"request": request,
+                                                              "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
+                                                              })
 
 # Serve Form Builder Dashboard
 @app.get("/form-builder", response_class=HTMLResponse)
 async def form_builder(request: Request):
-    return templates.TemplateResponse("form-builder.html", {"request": request})
+    return templates.TemplateResponse("form-builder.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 # Serve Form Submission Dashboard
 @app.get("/form-submission", response_class=HTMLResponse)
 async def form_submission(request: Request, form_id: int):
-    return templates.TemplateResponse("form-submission.html", {"request": request,"form_id": form_id})
+    return templates.TemplateResponse("form-submission.html", {"request": request, "form_id": form_id, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 
 # Manage Users Dashboard for admins
 @app.get("/manage-users", response_class=HTMLResponse)
 async def serve_user_management(request: Request):
-    return templates.TemplateResponse("manage-users.html", {"request": request})
+    return templates.TemplateResponse("manage-users.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 
 
 @app.get("/submission-history", response_class=HTMLResponse)
 async def submission_history_page(request: Request):
-    return templates.TemplateResponse("submission-history.html", {"request": request})
+    return templates.TemplateResponse("submission-history.html", {"request": request, "API_BASE_URL": os.getenv("API_BASE_URL", "http://127.0.0.1:8000")})
 

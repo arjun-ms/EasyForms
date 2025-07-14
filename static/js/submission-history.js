@@ -17,8 +17,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Check user role or presence of token to decide whether to clear it
   //! const isAdmin = localStorage.getItem("user_role") === "admin";
-  const formId = isAdmin ? localStorage.getItem("view_submissions_form_id") : null;
-  
+  const formId = isAdmin
+    ? localStorage.getItem("view_submissions_form_id")
+    : null;
+
   // console.log(`is Admin: ${isAdmin}`)
   // console.log("Form ID:", formId);
 
@@ -36,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!formId) {
       // console.log("THIS IS INSIDE USER: SHOW SUBMISSIONS");
 
-      const res = await fetch("/user/forms/", {
+      const res = await fetch(apiBaseUrl + "/user/forms/", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.log("THIS IS INSIDE ADMIN: SHOW SUBMISSIONS");
       console.log(localStorage.getItem("view_submissions_form_id"));
 
-      const res = await fetch(`/forms/${formId}/submissions`, {
+      const res = await fetch(`${apiBaseUrl}/forms/${formId}/submissions`, {
         headers: {
           Authorization: "Bearer " + token,
         },

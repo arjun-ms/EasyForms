@@ -55,6 +55,9 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
+db_url = context.get_x_argument(as_dictionary=True).get("dburl")
+if db_url:
+    config.set_main_option("sqlalchemy.url", db_url)
 
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
