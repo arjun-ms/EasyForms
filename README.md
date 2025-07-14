@@ -9,7 +9,7 @@ A lightweight form management system built using **FastAPI** (backend) and **HTM
 
 ## Demo
 
-<insert your demo here> 
+[Visit the site from here](https://easyforms.onrender.com)
 
 ## 🚀 Features
 
@@ -66,6 +66,8 @@ DB_NAME=db_name
 SECRET_KEY=your_secret_key_here
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=120
+RENDER_DB_URL=your_hosted_db_url
+API_BASE_URL=your_hosted_link
 ```
 
 ### 3. Run the Server
