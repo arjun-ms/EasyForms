@@ -80,6 +80,10 @@ uvicorn backend.main:app --reload
 
 ---
 
+## API Docs
+
+> 👉 Refer to the [API.md](./API.md) file for complete endpoint details.
+
 ## 📌 Project Progress
 
 ### ✅ Core Functionalities
