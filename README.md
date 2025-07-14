@@ -1,4 +1,4 @@
-# 📝 Dynamic Form Platform
+# 📝 EasyForms
 
 A lightweight form management system built using **FastAPI** (backend) and **HTML/CSS/JS** (frontend) that enables:
 
@@ -31,7 +31,6 @@ A lightweight form management system built using **FastAPI** (backend) and **HTM
 
 ### 📊 Analytics (Admin)
 - View all submissions for a specific form
-- **[Planned]** Field-wise breakdown with counts/averages
 
 ---
 
@@ -51,16 +50,22 @@ A lightweight form management system built using **FastAPI** (backend) and **HTM
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-username/dynamic-form-platform.git
-cd dynamic-form-platform
+git clone https://github.com/arjun-ms/EasyForms.git
+cd EasyForms
 pip install -r requirements.txt
 ```
 
 ### 2. Set Environment Variables
 Create a `.env` file or set manually:
 ```env
-DATABASE_URL=sqlite:///./form.db
-JWT_SECRET_KEY=your_secret_key
+DB_USER=username
+DB_PASSWORD=password
+DB_HOST=localhost
+DB_PORT=1234
+DB_NAME=db_name
+SECRET_KEY=your_secret_key_here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=120
 ```
 
 ### 3. Run the Server
@@ -85,35 +90,6 @@ uvicorn backend.main:app --reload
 - [x] User form submission
 - [x] Submission history
 - [x] Basic analytics (submissions per form)
-
-### 🔄 In Progress
-- [ ] Admin: Analytics summary (`/forms/{id}/analytics`)
-- [ ] Frontend: Dynamic charts or CSV export
-- [ ] Unit tests & Swagger docs
-
----
-```
-.
-├── main.py
-├── database.py
-├── models.py
-├── schemas.py
-├── routers/
-│   ├── user.py
-│   ├── forms.py
-│   ├── user_forms.py
-│   └── submissions.py
-├── static/
-│   └── js/
-│       ├── login.js
-│       ├── form-builder.js
-│       ├── fetch-forms.js
-│       └── form-submission.js
-├── templates/
-│   └── *.html
-```
-
----
 
 ## ✅ Success Criteria
 
