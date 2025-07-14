@@ -2,10 +2,14 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import os
 
 from .routers import user, forms, user_forms
 
 app = FastAPI()
+
+# Base directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Existing user router
 app.include_router(user.router)
@@ -19,14 +23,18 @@ def health_check():
     return {"status": "ok"}
 
 # Serve all HTML/JS/CSS from the "static" folder
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
 
 # Setup Jinja2 template engine
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 # Serve index.html (login page) 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/index.html", response_class=HTMLResponse)
+async def serve_index_alias(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 # Serve signup.html (signup page) 
